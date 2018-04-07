@@ -1,0 +1,98 @@
+/**
+ * Place your custom CSS styles here.
+ **/
+
+.fishie--userSection {
+    font-size: 20px;
+}
+.Icon--fishy:before {
+  /*content: '\f170';*/
+  /*content: '\f128031';*/
+   content: '\1f41f';
+  /*content: '&#128031;';*/
+
+}
+.probably-a-bot {
+  -webkit-filter: blur(10px);
+}
+
+.probably-a-bot-mask {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-color: white;
+  display: inline-block;
+  z-index: 1;
+  opacity: 0.9;
+}
+
+.probably-a-bot-mask-message-tall {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 50%;
+  height: 30%;
+  margin: auto;
+  text-align: center;
+  font-size: 1.5rem;
+  line-height: 2.25rem;
+}
+
+.probably-a-bot-mask-message-medium {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 50%;
+  height: 50%;
+  margin: auto;
+  text-align: center;
+  font-size: 1.5rem;
+  line-height: 2.25rem;
+}
+
+.probably-a-bot-mask-message-short {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 50%;
+  margin: auto;
+  text-align: center;
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+#overlay-container {
+    position: fixed;
+    display: none;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 2;
+    cursor: pointer;
+}
+
+#overlay-content{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    font-size: 50px;
+    color: white;
+    transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+}
+
+.toxic {
+    background-color: yellow;
+    color: red;
+}
