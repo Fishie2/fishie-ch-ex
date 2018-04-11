@@ -4,18 +4,22 @@
   "version": "0.1",
   "manifest_version": 2,
   "description": "Tools to fight the disinformation overload on social media.",
-  "permissions": ["storage"],
+  "permissions": ["storage", "https://twitter.com/*"],
   "background": {
     "scripts": ["background/background.js"],
     "persistent": false
   },
+  "content_scripts": [
+    {
+      "matches": ["https://twitter.com/*"],
+      "js": ["content-scripts/onLoadTwitter.js"]
+    }
+  ],
   "browser_action": {
     "default_icon": "icons/icon48.png",
     "default_title": "Fishie",
     "default_popup": "popup/popup.html"
   },
-
-
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
