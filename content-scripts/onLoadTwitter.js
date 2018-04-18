@@ -1,12 +1,65 @@
+
+const TWEET_TEXT_CLASS = 'tweet-text'
+const TWEET_TEXT_SELECTOR = '.' + TWEET_TEXT_CLASS
+
+/**
+ *
+ * @param tweet
+ * @returns the textContent of the tweet as a String. does not return the link
+ *  OR
+ *  @returns undefined if the tweet does not have the tweet text dom element
+ */
+function getTextFromTweet(tweet){
+    const tweetTextDom = tweet.querySelector(TWEET_TEXT_SELECTOR)
+    if (!tweetTextDom) {
+        console.error('there is no tweettext for ', tweet)
+        return
+    }
+    const tweetText = tweetTextDom.textContent
+    return tweetText;
+}
+
+/**
+ *
+ * @param tweet
+ * @returns the link of the tweet as a String
+ *  OR
+ *  @returns undefined if the tweet has no link or no tweet text element
+ */
+function getLinkFromTweet(tweet){
+    const tweetTextDom = tweet.querySelector(TWEET_TEXT_SELECTOR)
+    if (!tweetTextDom) {
+        console.error('getLinkfromtweet no tweetTextDom found for ', tweet)
+        return
+    }
+    const tweetTextDomLink = tweetTextDom.querySelector('a')
+    if (!tweetTextDomLink) {
+        return
+    }
+    const tweetLinkText = tweetTextDomLink.getAttribute('data-expanded-url')
+    return tweetLinkText
+}
+/**
+ *
+ * @param tweet
+ * @returns the userId of the tweet as a String
+ */
+function getUserIdFromTweet(tweet){
+    const dataUserId = tweet.getAttribute('data-user-id')
+    return dataUserId
+}
+
+
 window.onload = function() {
-    //Find the elements containing the icons beneath each tweet
-    var actionItems = document.getElementsByClassName('ProfileTweet-actionList js-actions');
+
 
 
     //Add in icon for Fishie modal
-    var buttonInHtml = "<button type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" data-target=\"#exampleModalCenter\">\n" +
-        "    Launch demo modal\n" +
-        "</button>\n";
+    /*
+    !!!!!!!!!!!!1REPLACE 'icons/icon48.png'!!!!!!!!!!!!!!!!!!!111
+     */
+    var iconImg = document.createElement('img');
+    iconImg.setAttribute('src', 'https://cdn4.iconfinder.com/data/icons/car-tools/512/Maintenance-48.png'); //temporary
 
     var modalInHtml = "<!-- Modal -->\n" +
         "    <div class=\"modal-dialog modal-dialog-centered\" role=\"document\">\n" +
@@ -88,9 +141,40 @@ window.onload = function() {
     }
 
     /*
-    Add in action item (button) on each tweet to open modal
+    Iterate through tweet objects, do the following:
+
+    1) Find user, message, and source for each tweet
+    2) Insert button with id = i.toString() for each tweet
      */
-    for (var i = 0; i < actionItems.length; i++) {
-        actionItems[i].insertAdjacentHTML('beforeend', buttonInHtml);
+
+    var users = [];
+    var messages = [];
+    var sources = [];
+
+    var items = document.getElementsByClassName('tweet');
+    for(var i=0;i<items.length;i++) {
+
+        //Collect the necessary information from each tweet
+        var it = items[i];
+        users.push(getUserIdFromTweet(it));
+        messages.push(getTextFromTweet(it));
+        sources.push(getLinkFromTweet(it));
+
+        //Add in button to action items row in the HTML
+        var iconButton = document.createElement('button');
+
+        //Set attributes for button
+        iconButton.setAttribute('id', i.toString());  //This allows indexing buttons along with the parameters for onClick
+        iconButton.setAttribute('type', 'button');
+        iconButton.setAttribute('class', 'btn btn-primary');
+        iconButton.setAttribute('data-toggle', 'modal');
+        iconButton.setAttribute('data-target', '#exampleModalCenter');
+
+        //add icon image to the button
+        iconButton.appendChild(iconImg);
+
+        it.getElementsByClassName('ProfileTweet-actionList js-actions')[0].appendChild(iconButton);
+
+
     }
 }
