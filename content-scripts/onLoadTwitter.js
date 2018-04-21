@@ -79,6 +79,8 @@ window.onload = function() {
         "            </div>\n" +
         "        </div>\n" +
         "    </div>\n";
+    var htmlParser = new DOMParser();
+    var modelDOM = htmlParser.parseFromString(modalInHtml,"text/html");
 
     /*
     Add in necessary link and scripts for bootstrap
@@ -133,7 +135,7 @@ window.onload = function() {
         modal.setAttribute("role", "dialog");
         modal.setAttribute("aria-labelledby","exampleModalCenterTitle");
         modal.setAttribute("aria-hidden","true");
-        modal.setAttribute("style","{position: absolute}")
+        modal.setAttribute("style","{position: absolute}");
 
         //insert the rest of the modal
         modal.innerHTML = modalInHtml;
@@ -169,6 +171,7 @@ window.onload = function() {
         iconButton.setAttribute('class', 'btn btn-primary');
         iconButton.setAttribute('data-toggle', 'modal');
         iconButton.setAttribute('data-target', '#exampleModalCenter');
+        iconButton.setAttribute('onclick', 'callApi(' + users[i] + ',' + messages[i] + ',' + sources[i]+ ')' );
 
         //add icon image to the button
         iconButton.appendChild(iconImg);
@@ -178,3 +181,70 @@ window.onload = function() {
 
     }
 }
+
+function callApi(user, message, source){
+    let modal = document.getElementById("exampleModalCenter");
+    let body = modal.querySelector(".modal-body");
+    body.innerHTML = "";
+
+    var botLoader = (response) => {
+        let insertElem = document.createElement("div");
+
+        let header = document.createElement("h3");
+        header.innerHTML = "Bot Output";
+        insertElem.appendChild(header);
+
+        let text = document.createElement("p");
+        text.innerHTML = response.target.response;
+        insertElem.appendChild(text);
+    };
+
+    var toxicLoader = (response) => {
+        let insertElem = document.createElement("div");
+
+        let header = document.createElement("h3");
+        header.innerHTML = "Toxic Output";
+        insertElem.appendChild(header);
+
+        let text = document.createElement("p");
+        text.innerHTML = response.target.response;
+        insertElem.appendChild(text);
+    };
+
+    var sourceLoader = (response) => {
+        let insertElem = document.createElement("div");
+
+        let header = document.createElement("h3");
+        header.innerHTML = "Source Output";
+        insertElem.appendChild(header);
+
+        let text = document.createElement("p");
+        text.innerHTML = response.target.response;
+        insertElem.appendChild(text);
+    };
+    var defaultError = (error)=>{console.log(error)};
+    var botxhr = generateRequest(botLoader,defaultError);
+    var toxicxhr = generateRequest(toxicLoader,defaultError);
+    var sourcexhr = generateRequest(sourceLoader,defaultError);
+
+    sendRequest(botxhr,"botometer","userID",user);
+    sendRequest(toxicxhr, "perspective","message",message);
+    sendRequest(sourcexhr, "source_lookup", "source", source);
+
+
+}
+
+function generateRequest(resolveHandler, errorHandler){
+    xhr = new XMLHttpRequest();   // new HttpRequest instance
+    xhr.onload = resolveHandler;
+    xhr.onerror = errorHandler;
+    return xhr;
+}
+function sendRequest(xhr, apiName, fieldName, data){
+    let url = "http://45.55.37.15:5000/api/v0.1/";
+    xhr.open("POST", url+apiName);
+    let request = {};
+    request[fieldName] = data;
+    xhr.send(JSON.stringify(request));
+}
+
